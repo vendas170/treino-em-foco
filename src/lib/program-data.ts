@@ -2117,14 +2117,18 @@ const RAW: Exercise[][][] = [
 ];
 
 export const PROGRAM: Record<1 | 2 | 3 | 4, PhaseWorkouts> = {
-  1: toPhase(RAW[0]),
-  2: toPhase(RAW[1]),
-  3: toPhase(RAW[2]),
-  4: toPhase(RAW[3]),
+  1: toPhase(RAW[0]!),
+  2: toPhase(RAW[1]!),
+  3: toPhase(RAW[2]!),
+  4: toPhase(RAW[3]!),
 };
 
 function toPhase(rows: Exercise[][]): PhaseWorkouts {
-  return { A: rows[0], B: rows[1], C: rows[2], D: rows[3], E: rows[4] };
+  return { A: rows[0]!, B: rows[1]!, C: rows[2]!, D: rows[3]!, E: rows[4]! };
+}
+
+export function getPhase(n: number): Phase {
+  return PHASES[Math.min(4, Math.max(1, n)) - 1]!;
 }
 
 export function getExercises(phase: number, letter: WorkoutLetter): Exercise[] {

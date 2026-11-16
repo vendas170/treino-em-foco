@@ -39,7 +39,7 @@ export function PageHeader({
   );
 }
 
-export function ProfileButton({ name }: { name?: string | null }) {
+export function ProfileButton({ name }: { name?: string | null | undefined }) {
   const initials = (name ?? "?")
     .split(/\s+/)
     .filter(Boolean)

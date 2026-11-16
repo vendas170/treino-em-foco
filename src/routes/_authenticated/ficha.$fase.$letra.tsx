@@ -6,7 +6,7 @@ import { WorkoutHeader } from "@/components/gd/WorkoutHeader";
 import { Button } from "@/components/ui/button";
 import { useGD } from "@/hooks/use-gd";
 import { ensureAppData } from "@/lib/data";
-import { LETTERS, PHASES, getExercises, type WorkoutLetter } from "@/lib/program-data";
+import { LETTERS, PHASES, getExercises, getPhase, type WorkoutLetter } from "@/lib/program-data";
 
 export const Route = createFileRoute("/_authenticated/ficha/$fase/$letra")({
   head: () => ({
@@ -44,7 +44,7 @@ function Sheet() {
   const isToday = todayDay?.letter === letter && phase === currentPhase;
   return (
     <div>
-      <PageHeader back eyebrow={`Fase ${phase} · Semanas ${PHASES[phase - 1].weeks.join("–")}`} title={`Treino ${letter}`} />
+      <PageHeader back eyebrow={`Fase ${phase} · Semanas ${getPhase(phase).weeks.join("–")}`} title={`Treino ${letter}`} />
       <WorkoutHeader letter={letter} phase={phase} count={exercises.length} />
       {isToday && (
         <Button asChild variant="hero" size="xl" className="mt-4 w-full">

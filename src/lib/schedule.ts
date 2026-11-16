@@ -33,7 +33,7 @@ export function normalizeStartDate(d: Date): string {
 export function letterFor(week: number, weekday: number): WorkoutLetter | null {
   if (weekday > 4) return null;
   const offset = (week - 1) % 4;
-  return LETTERS[(offset + weekday) % 5];
+  return LETTERS[(offset + weekday) % 5] ?? null;
 }
 
 export function phaseForWeek(week: number): number {
@@ -89,7 +89,7 @@ export function trainingStreak(startDate: string, today: Date, completedDates: S
   const days = scheduledTrainingDaysUntil(startDate, today);
   let streak = 0;
   for (let i = days.length - 1; i >= 0; i--) {
-    const d = days[i];
+    const d = days[i]!;
     if (completedDates.has(d.date)) streak++;
     else if (d.date === toISODate(today)) continue;
     else break;

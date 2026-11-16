@@ -93,7 +93,7 @@ export function flushQueue() {
     const queue = readQueue(uid);
     const remaining: PendingRow[] = [];
     for (let i = 0; i < queue.length; i++) {
-      const row = queue[i];
+      const row = queue[i]!;
       const { error } = await supabase.from("workout_sessions").upsert(row, { onConflict: "id" });
       if (!error) {
         synced++;
@@ -215,7 +215,7 @@ export type SessionAction = "start" | "complete" | "void";
 
 export function buildSessionChange(
   action: SessionAction,
-  ctx: { userId: string; programId: string; day: ProgramDay; existing?: SessionRow; now?: Date; today: string },
+  ctx: { userId: string; programId: string; day: ProgramDay; existing?: SessionRow | undefined; now?: Date; today: string },
 ): PendingRow {
   const { userId, programId, day, existing, today } = ctx;
   const now = (ctx.now ?? new Date()).toISOString();

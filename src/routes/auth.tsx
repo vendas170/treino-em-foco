@@ -11,10 +11,14 @@ import { lovable } from "@/integrations/lovable/index";
 type Mode = "signin" | "signup" | "forgot";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>): { mode?: Mode; redirect?: string } => ({
-    mode: s.mode === "signup" || s.mode === "forgot" ? s.mode : s.mode === "signin" ? "signin" : undefined,
-    redirect: typeof s.redirect === "string" ? s.redirect : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { mode?: Mode | undefined; redirect?: string | undefined } => {
+    const m = s["mode"];
+    const r = s["redirect"];
+    return {
+      mode: m === "signup" || m === "forgot" || m === "signin" ? m : undefined,
+      redirect: typeof r === "string" ? r : undefined,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Entrar — GDshape" },

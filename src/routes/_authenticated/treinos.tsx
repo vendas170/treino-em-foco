@@ -5,7 +5,7 @@ import { AppShell } from "@/components/gd/AppShell";
 import { PageHeader, ProfileButton } from "@/components/gd/PageHeader";
 import { useGD } from "@/hooks/use-gd";
 import { ensureAppData } from "@/lib/data";
-import { LETTERS, PHASES, WORKOUTS, getExercises } from "@/lib/program-data";
+import { LETTERS, PHASES, WORKOUTS, getExercises, getPhase } from "@/lib/program-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/treinos")({
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/treinos")({
 function Workouts() {
   const { phase, profile, todayDay } = useGD();
   const [sel, setSel] = useState(phase);
-  const ph = PHASES[sel - 1];
+  const ph = getPhase(sel);
   return (
     <div>
       <PageHeader eyebrow="Divisão A–E" title="Treinos" right={<ProfileButton name={profile?.display_name} />} />

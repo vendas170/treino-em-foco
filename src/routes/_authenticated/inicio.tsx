@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useGD } from "@/hooks/use-gd";
 import { ensureAppData } from "@/lib/data";
 import { motivationFor } from "@/lib/motivation";
-import { PHASES, WORKOUTS } from "@/lib/program-data";
+import { WORKOUTS, getPhase } from "@/lib/program-data";
 import { completionPercent, fromISODate, getProgramDay, getWeekDays, TOTAL_TRAINING_DAYS } from "@/lib/schedule";
 import { addDays } from "date-fns";
 
@@ -55,7 +55,7 @@ function Dashboard() {
   const days = getWeekDays(program.start_date, weekClamped);
   const remaining = days.filter((d) => d.kind === "training" && d.date >= today && sessionFor(d.date)?.status !== "completed").length;
   const todaySession = sessionFor(today);
-  const phaseInfo = PHASES[phase - 1];
+  const phaseInfo = getPhase(phase);
 
   return (
     <div className="space-y-6">

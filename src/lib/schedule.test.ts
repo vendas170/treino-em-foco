@@ -34,9 +34,9 @@ describe("fases", () => {
   it("muda de fase nas semanas 5, 9 e 13", () => {
     expect(getProgramDay(START, "2026-12-13").phase).toBe(1); // domingo da semana 4
     expect(getProgramDay(START, "2026-12-14").phase).toBe(2); // segunda da semana 5
-    expect(getWeekDays(START, 9)[0].phase).toBe(3);
-    expect(getWeekDays(START, 13)[0].phase).toBe(4);
-    expect(getWeekDays(START, 16)[4].phase).toBe(4);
+    expect(getWeekDays(START, 9)[0]?.phase).toBe(3);
+    expect(getWeekDays(START, 13)[0]?.phase).toBe(4);
+    expect(getWeekDays(START, 16)[4]?.phase).toBe(4);
   });
   it("datas fora das 16 semanas não têm treino", () => {
     expect(getProgramDay(START, "2026-11-15").kind).toBe("outside");

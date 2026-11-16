@@ -1,8 +1,8 @@
 import { Dumbbell, Layers, Timer } from "lucide-react";
-import { PHASES, WORKOUTS, type WorkoutLetter } from "@/lib/program-data";
+import { WORKOUTS, getPhase, type WorkoutLetter } from "@/lib/program-data";
 
-export function WorkoutHeader({ letter, phase, week, count }: { letter: WorkoutLetter; phase: number; week?: number | null; count: number }) {
-  const ph = PHASES[phase - 1];
+export function WorkoutHeader({ letter, phase, week, count }: { letter: WorkoutLetter; phase: number; week?: number | null | undefined; count: number }) {
+  const ph = getPhase(phase);
   return (
     <section className="relative overflow-hidden rounded-3xl border border-border bg-hero p-5">
       <span className="pointer-events-none absolute -right-2 -top-8 select-none font-display text-[10rem] font-extrabold italic leading-none text-primary/10">

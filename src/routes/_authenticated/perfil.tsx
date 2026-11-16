@@ -55,7 +55,10 @@ function ProfilePage() {
     setSavingName(true);
     const { error } = await supabase.from("profiles").update({ display_name: name.trim() }).eq("id", profile!.id);
     setSavingName(false);
-    if (error) return toast.error("Não foi possível salvar. Verifique a conexão.");
+    if (error) {
+      toast.error("Não foi possível salvar. Verifique a conexão.");
+      return;
+    }
     await qc.invalidateQueries({ queryKey: ["profile"] });
     toast.success("Nome atualizado.");
   }
