@@ -99,17 +99,13 @@ function EvolutionPage() {
         </BarChart>
       </ChartCard>
 
-      <ChartCard title="Frequência mensal" subtitle="Treinos concluídos por mês">
-        {data.perMonth.length ? (
+      <ChartCard title="Frequência mensal" subtitle="Treinos concluídos por mês" empty={!data.perMonth.length}>
           <BarChart data={data.perMonth} margin={{ top: 8, right: 4, left: -28, bottom: 0 }}>
             <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
             <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
             <Tooltip {...tooltipStyle} />
             <Bar dataKey="treinos" radius={[6, 6, 0, 0]} fill="var(--primary-glow)" />
           </BarChart>
-        ) : (
-          <Empty />
-        )}
       </ChartCard>
 
       <ChartCard title="Distribuição A–E" subtitle="Quantas vezes cada treino foi concluído">
@@ -139,15 +135,19 @@ function Kpi({ icon: Icon, label, value, sub }: { icon: typeof Flame; label: str
   );
 }
 
-function ChartCard({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactElement }) {
+function ChartCard({ title, subtitle, children, empty }: { title: string; subtitle: string; children: React.ReactElement; empty?: boolean }) {
   return (
     <section className="rounded-3xl border border-border bg-card p-4">
       <p className="font-display text-xl font-bold uppercase">{title}</p>
       <p className="mb-3 text-xs text-muted-foreground">{subtitle}</p>
       <div className="h-44">
-        <ResponsiveContainer width="100%" height="100%">
-          {children}
-        </ResponsiveContainer>
+        {empty ? (
+          <Empty />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            {children}
+          </ResponsiveContainer>
+        )}
       </div>
     </section>
   );

@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authenticated/calendario'
+import { Route as AuthenticatedEvolucaoRouteImport } from './routes/_authenticated/evolucao'
+import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
 import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
@@ -42,6 +44,16 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const AuthenticatedCalendarioRoute = AuthenticatedCalendarioRouteImport.update({
   id: '/calendario',
   path: '/calendario',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEvolucaoRoute = AuthenticatedEvolucaoRouteImport.update({
+  id: '/evolucao',
+  path: '/evolucao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
@@ -76,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/calendario': typeof AuthenticatedCalendarioRoute
+  '/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
@@ -87,6 +101,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/calendario': typeof AuthenticatedCalendarioRoute
+  '/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
@@ -100,6 +116,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/calendario': typeof AuthenticatedCalendarioRoute
+  '/_authenticated/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/programa': typeof AuthenticatedProgramaRoute
   '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
@@ -113,6 +131,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/calendario'
+    | '/evolucao'
+    | '/historico'
     | '/inicio'
     | '/programa'
     | '/treinos'
@@ -124,6 +144,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/calendario'
+    | '/evolucao'
+    | '/historico'
     | '/inicio'
     | '/programa'
     | '/treinos'
@@ -136,6 +158,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/calendario'
+    | '/_authenticated/evolucao'
+    | '/_authenticated/historico'
     | '/_authenticated/inicio'
     | '/_authenticated/programa'
     | '/_authenticated/treinos'
@@ -187,6 +211,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCalendarioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/evolucao': {
+      id: '/_authenticated/evolucao'
+      path: '/evolucao'
+      fullPath: '/evolucao'
+      preLoaderRoute: typeof AuthenticatedEvolucaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/historico': {
+      id: '/_authenticated/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof AuthenticatedHistoricoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/inicio': {
       id: '/_authenticated/inicio'
       path: '/inicio'
@@ -227,6 +265,8 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCalendarioRoute: typeof AuthenticatedCalendarioRoute
+  AuthenticatedEvolucaoRoute: typeof AuthenticatedEvolucaoRoute
+  AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
   AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
@@ -236,6 +276,8 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCalendarioRoute: AuthenticatedCalendarioRoute,
+  AuthenticatedEvolucaoRoute: AuthenticatedEvolucaoRoute,
+  AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
   AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
