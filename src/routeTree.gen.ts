@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authenticated/calendario'
+import { Route as AuthenticatedEvolucaoRouteImport } from './routes/_authenticated/evolucao'
+import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
+import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
+import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
+import { Route as AuthenticatedTreinoDataRouteImport } from './routes/_authenticated/treino.$data'
+import { Route as AuthenticatedFichaFaseLetraRouteImport } from './routes/_authenticated/ficha.$fase.$letra'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCalendarioRoute = AuthenticatedCalendarioRouteImport.update({
+  id: '/calendario',
+  path: '/calendario',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEvolucaoRoute = AuthenticatedEvolucaoRouteImport.update({
+  id: '/evolucao',
+  path: '/evolucao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
+  id: '/inicio',
+  path: '/inicio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProgramaRoute = AuthenticatedProgramaRouteImport.update({
+  id: '/programa',
+  path: '/programa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTreinosRoute = AuthenticatedTreinosRouteImport.update({
+  id: '/treinos',
+  path: '/treinos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTreinoDataRoute = AuthenticatedTreinoDataRouteImport.update({
+  id: '/treino/$data',
+  path: '/treino/$data',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFichaFaseLetraRoute =
+  AuthenticatedFichaFaseLetraRouteImport.update({
+    id: '/ficha/$fase/$letra',
+    path: '/ficha/$fase/$letra',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
+  '/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
+  '/inicio': typeof AuthenticatedInicioRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
+  '/programa': typeof AuthenticatedProgramaRoute
+  '/treinos': typeof AuthenticatedTreinosRoute
+  '/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
+  '/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
+  '/inicio': typeof AuthenticatedInicioRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
+  '/programa': typeof AuthenticatedProgramaRoute
+  '/treinos': typeof AuthenticatedTreinosRoute
+  '/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/calendario': typeof AuthenticatedCalendarioRoute
+  '/_authenticated/evolucao': typeof AuthenticatedEvolucaoRoute
+  '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
+  '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/programa': typeof AuthenticatedProgramaRoute
+  '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
+  '/_authenticated/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/_authenticated/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/calendario'
+    | '/evolucao'
+    | '/historico'
+    | '/inicio'
+    | '/perfil'
+    | '/programa'
+    | '/treinos'
+    | '/treino/$data'
+    | '/ficha/$fase/$letra'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/calendario'
+    | '/evolucao'
+    | '/historico'
+    | '/inicio'
+    | '/perfil'
+    | '/programa'
+    | '/treinos'
+    | '/treino/$data'
+    | '/ficha/$fase/$letra'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/calendario'
+    | '/_authenticated/evolucao'
+    | '/_authenticated/historico'
+    | '/_authenticated/inicio'
+    | '/_authenticated/perfil'
+    | '/_authenticated/programa'
+    | '/_authenticated/treinos'
+    | '/_authenticated/treino/$data'
+    | '/_authenticated/ficha/$fase/$letra'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/calendario': {
+      id: '/_authenticated/calendario'
+      path: '/calendario'
+      fullPath: '/calendario'
+      preLoaderRoute: typeof AuthenticatedCalendarioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/evolucao': {
+      id: '/_authenticated/evolucao'
+      path: '/evolucao'
+      fullPath: '/evolucao'
+      preLoaderRoute: typeof AuthenticatedEvolucaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/historico': {
+      id: '/_authenticated/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof AuthenticatedHistoricoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inicio': {
+      id: '/_authenticated/inicio'
+      path: '/inicio'
+      fullPath: '/inicio'
+      preLoaderRoute: typeof AuthenticatedInicioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/programa': {
+      id: '/_authenticated/programa'
+      path: '/programa'
+      fullPath: '/programa'
+      preLoaderRoute: typeof AuthenticatedProgramaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/treinos': {
+      id: '/_authenticated/treinos'
+      path: '/treinos'
+      fullPath: '/treinos'
+      preLoaderRoute: typeof AuthenticatedTreinosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/treino/$data': {
+      id: '/_authenticated/treino/$data'
+      path: '/treino/$data'
+      fullPath: '/treino/$data'
+      preLoaderRoute: typeof AuthenticatedTreinoDataRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ficha/$fase/$letra': {
+      id: '/_authenticated/ficha/$fase/$letra'
+      path: '/ficha/$fase/$letra'
+      fullPath: '/ficha/$fase/$letra'
+      preLoaderRoute: typeof AuthenticatedFichaFaseLetraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCalendarioRoute: typeof AuthenticatedCalendarioRoute
+  AuthenticatedEvolucaoRoute: typeof AuthenticatedEvolucaoRoute
+  AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
+  AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
+  AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
+  AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
+  AuthenticatedTreinoDataRoute: typeof AuthenticatedTreinoDataRoute
+  AuthenticatedFichaFaseLetraRoute: typeof AuthenticatedFichaFaseLetraRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCalendarioRoute: AuthenticatedCalendarioRoute,
+  AuthenticatedEvolucaoRoute: AuthenticatedEvolucaoRoute,
+  AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
+  AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
+  AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
+  AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
+  AuthenticatedTreinoDataRoute: AuthenticatedTreinoDataRoute,
+  AuthenticatedFichaFaseLetraRoute: AuthenticatedFichaFaseLetraRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
