@@ -14,7 +14,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
+import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
 import { Route as AuthenticatedTreinoDataRouteImport } from './routes/_authenticated/treino.$data'
+import { Route as AuthenticatedFichaFaseLetraRouteImport } from './routes/_authenticated/ficha.$fase.$letra'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,25 +43,47 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProgramaRoute = AuthenticatedProgramaRouteImport.update({
+  id: '/programa',
+  path: '/programa',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTreinosRoute = AuthenticatedTreinosRouteImport.update({
+  id: '/treinos',
+  path: '/treinos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTreinoDataRoute = AuthenticatedTreinoDataRouteImport.update({
   id: '/treino/$data',
   path: '/treino/$data',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFichaFaseLetraRoute =
+  AuthenticatedFichaFaseLetraRouteImport.update({
+    id: '/ficha/$fase/$letra',
+    path: '/ficha/$fase/$letra',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/programa': typeof AuthenticatedProgramaRoute
+  '/treinos': typeof AuthenticatedTreinosRoute
   '/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/programa': typeof AuthenticatedProgramaRoute
+  '/treinos': typeof AuthenticatedTreinosRoute
   '/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +92,32 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/programa': typeof AuthenticatedProgramaRoute
+  '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
   '/_authenticated/treino/$data': typeof AuthenticatedTreinoDataRoute
+  '/_authenticated/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/inicio' | '/treino/$data'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/inicio'
+    | '/programa'
+    | '/treinos'
+    | '/treino/$data'
+    | '/ficha/$fase/$letra'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/inicio' | '/treino/$data'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/inicio'
+    | '/programa'
+    | '/treinos'
+    | '/treino/$data'
+    | '/ficha/$fase/$letra'
   id:
     | '__root__'
     | '/'
@@ -81,7 +125,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/inicio'
+    | '/_authenticated/programa'
+    | '/_authenticated/treinos'
     | '/_authenticated/treino/$data'
+    | '/_authenticated/ficha/$fase/$letra'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -128,6 +175,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/programa': {
+      id: '/_authenticated/programa'
+      path: '/programa'
+      fullPath: '/programa'
+      preLoaderRoute: typeof AuthenticatedProgramaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/treinos': {
+      id: '/_authenticated/treinos'
+      path: '/treinos'
+      fullPath: '/treinos'
+      preLoaderRoute: typeof AuthenticatedTreinosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/treino/$data': {
       id: '/_authenticated/treino/$data'
       path: '/treino/$data'
@@ -135,17 +196,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTreinoDataRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ficha/$fase/$letra': {
+      id: '/_authenticated/ficha/$fase/$letra'
+      path: '/ficha/$fase/$letra'
+      fullPath: '/ficha/$fase/$letra'
+      preLoaderRoute: typeof AuthenticatedFichaFaseLetraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
+  AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
   AuthenticatedTreinoDataRoute: typeof AuthenticatedTreinoDataRoute
+  AuthenticatedFichaFaseLetraRoute: typeof AuthenticatedFichaFaseLetraRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
+  AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
   AuthenticatedTreinoDataRoute: AuthenticatedTreinoDataRoute,
+  AuthenticatedFichaFaseLetraRoute: AuthenticatedFichaFaseLetraRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
