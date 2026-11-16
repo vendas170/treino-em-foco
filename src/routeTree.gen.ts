@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedTreinoDataRouteImport } from './routes/_authenticated/treino.$data'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +40,25 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTreinoDataRoute = AuthenticatedTreinoDataRouteImport.update({
+  id: '/treino/$data',
+  path: '/treino/$data',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/treino/$data': typeof AuthenticatedTreinoDataRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/treino/$data': typeof AuthenticatedTreinoDataRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/treino/$data': typeof AuthenticatedTreinoDataRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/inicio'
+  fullPaths: '/' | '/auth' | '/reset-password' | '/inicio' | '/treino/$data'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/inicio'
+  to: '/' | '/auth' | '/reset-password' | '/inicio' | '/treino/$data'
   id:
     | '__root__'
     | '/'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/inicio'
+    | '/_authenticated/treino/$data'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +128,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/treino/$data': {
+      id: '/_authenticated/treino/$data'
+      path: '/treino/$data'
+      fullPath: '/treino/$data'
+      preLoaderRoute: typeof AuthenticatedTreinoDataRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedTreinoDataRoute: typeof AuthenticatedTreinoDataRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedTreinoDataRoute: AuthenticatedTreinoDataRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
