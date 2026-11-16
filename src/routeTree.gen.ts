@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authenticated/calendario'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
 import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
 import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
@@ -37,6 +38,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCalendarioRoute = AuthenticatedCalendarioRouteImport.update({
+  id: '/calendario',
+  path: '/calendario',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   id: '/inicio',
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/calendario': typeof AuthenticatedCalendarioRoute
   '/inicio': typeof AuthenticatedInicioRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/calendario': typeof AuthenticatedCalendarioRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
   '/_authenticated/programa': typeof AuthenticatedProgramaRoute
   '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/calendario'
     | '/inicio'
     | '/programa'
     | '/treinos'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/calendario'
     | '/inicio'
     | '/programa'
     | '/treinos'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/calendario'
     | '/_authenticated/inicio'
     | '/_authenticated/programa'
     | '/_authenticated/treinos'
@@ -168,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/calendario': {
+      id: '/_authenticated/calendario'
+      path: '/calendario'
+      fullPath: '/calendario'
+      preLoaderRoute: typeof AuthenticatedCalendarioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/inicio': {
       id: '/_authenticated/inicio'
       path: '/inicio'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCalendarioRoute: typeof AuthenticatedCalendarioRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
   AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
   AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
@@ -215,6 +235,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCalendarioRoute: AuthenticatedCalendarioRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
   AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
   AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
