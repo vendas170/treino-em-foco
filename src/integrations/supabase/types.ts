@@ -14,7 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          preferences: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          preferences?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          preferences?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      programs: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          id: string
+          name: string
+          start_date: string
+          status: string
+          total_weeks: number
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          start_date: string
+          status?: string
+          total_weeks?: number
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          start_date?: string
+          status?: string
+          total_weeks?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      workout_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          phase_number: number
+          program_id: string
+          session_date: string
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          voided_at: string | null
+          week_number: number
+          workout_letter: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          phase_number: number
+          program_id: string
+          session_date: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          voided_at?: string | null
+          week_number: number
+          workout_letter: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          phase_number?: number
+          program_id?: string
+          session_date?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          voided_at?: string | null
+          week_number?: number
+          workout_letter?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sessions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
