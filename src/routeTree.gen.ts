@@ -17,6 +17,7 @@ import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authentic
 import { Route as AuthenticatedEvolucaoRouteImport } from './routes/_authenticated/evolucao'
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
 import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
 import { Route as AuthenticatedTreinoDataRouteImport } from './routes/_authenticated/treino.$data'
@@ -61,6 +62,11 @@ const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
   path: '/inicio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProgramaRoute = AuthenticatedProgramaRouteImport.update({
   id: '/programa',
   path: '/programa',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/evolucao': typeof AuthenticatedEvolucaoRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
   '/treino/$data': typeof AuthenticatedTreinoDataRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/evolucao': typeof AuthenticatedEvolucaoRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/inicio': typeof AuthenticatedInicioRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
   '/programa': typeof AuthenticatedProgramaRoute
   '/treinos': typeof AuthenticatedTreinosRoute
   '/treino/$data': typeof AuthenticatedTreinoDataRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/_authenticated/evolucao': typeof AuthenticatedEvolucaoRoute
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/inicio': typeof AuthenticatedInicioRoute
+  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/_authenticated/programa': typeof AuthenticatedProgramaRoute
   '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
   '/_authenticated/treino/$data': typeof AuthenticatedTreinoDataRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/evolucao'
     | '/historico'
     | '/inicio'
+    | '/perfil'
     | '/programa'
     | '/treinos'
     | '/treino/$data'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/evolucao'
     | '/historico'
     | '/inicio'
+    | '/perfil'
     | '/programa'
     | '/treinos'
     | '/treino/$data'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated/evolucao'
     | '/_authenticated/historico'
     | '/_authenticated/inicio'
+    | '/_authenticated/perfil'
     | '/_authenticated/programa'
     | '/_authenticated/treinos'
     | '/_authenticated/treino/$data'
@@ -232,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInicioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/programa': {
       id: '/_authenticated/programa'
       path: '/programa'
@@ -268,6 +287,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEvolucaoRoute: typeof AuthenticatedEvolucaoRoute
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
+  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
   AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
   AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
   AuthenticatedTreinoDataRoute: typeof AuthenticatedTreinoDataRoute
@@ -279,6 +299,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEvolucaoRoute: AuthenticatedEvolucaoRoute,
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedInicioRoute: AuthenticatedInicioRoute,
+  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
   AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
   AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
   AuthenticatedTreinoDataRoute: AuthenticatedTreinoDataRoute,
