@@ -18,7 +18,6 @@ export function BottomNav() {
             <Link
               to={to}
               className="group flex flex-col items-center gap-1 rounded-xl py-1.5 text-muted-foreground transition-colors data-[status=active]:text-primary"
-              activeProps={{ "data-status": "active" } as Record<string, string>}
             >
               <span className="relative flex h-8 w-12 items-center justify-center rounded-full transition-all group-data-[status=active]:bg-primary/12 group-data-[status=active]:glow-sm">
                 <Icon className="h-5 w-5" strokeWidth={2} />
