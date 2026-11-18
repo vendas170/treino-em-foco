@@ -68,8 +68,7 @@ export function useSessionActions() {
           existing: existing ?? activeSessionFor(sessions, program.id, day.date),
           today,
         });
-        const { offline } = await commitSessionChange(qc, row);
-        if (offline) toast.message("Sem conexão", { description: "Registro salvo no aparelho. Sincroniza quando a internet voltar." });
+        await commitSessionChange(qc, row);
         return true;
       } catch (err) {
         toast.error((err as Error).message);

@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Download, LogOut, RotateCcw, Save } from "lucide-react";
+import { Download, FileDown, FileUp, RotateCcw, Save, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/gd/AppShell";
 import { ConfirmDialog } from "@/components/gd/ConfirmDialog";
@@ -12,16 +12,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useGD } from "@/hooks/use-gd";
-import { supabase } from "@/integrations/supabase/client";
-import { ensureAppData, programsQuery, type Preferences } from "@/lib/data";
+import { ensureAppData, exportBackup, importBackup, programsQuery, startProgram, updateProfile, type Preferences } from "@/lib/data";
 import { PHASES, WORKOUTS, type WorkoutLetter } from "@/lib/program-data";
 import { fromISODate, normalizeStartDate, toISODate } from "@/lib/schedule";
 
-export const Route = createFileRoute("/_authenticated/perfil")({
+export const Route = createFileRoute("/_gd/perfil")({
   head: () => ({
     meta: [
       { title: "Perfil — GDshape" },
-      { name: "description", content: "Seu nome, programa atual, preferências, exportação do histórico e conta." },
+      { name: "description", content: "Seu nome, programa atual, preferências, backup e exportação do histórico." },
       { property: "og:title", content: "Perfil — GDshape" },
       { property: "og:description", content: "Perfil e configurações do GDshape." },
       { property: "og:type", content: "website" },
@@ -47,17 +46,20 @@ function ProfilePage() {
   const [savingName, setSavingName] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [newStart, setNewStart] = useState(toISODate(new Date()));
-  const [logoutOpen, setLogoutOpen] = useState(false);
+  const [restoreText, setRestoreText] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   if (!program || !profile) return null;
 
   async function saveName() {
     setSavingName(true);
-    const { error } = await supabase.from("profiles").update({ display_name: name.trim() }).eq("id", profile!.id);
-    setSavingName(false);
-    if (error) {
-      toast.error("Não foi possível salvar. Verifique a conexão.");
+    try {
+      updateProfile({ display_name: name.trim() });
+    } catch {
+      toast.error("Não foi possível salvar.");
       return;
+    } finally {
+      setSavingName(false);
     }
     await qc.invalidateQueries({ queryKey: ["profile"] });
     toast.success("Nome atualizado.");
@@ -65,12 +67,12 @@ function ProfilePage() {
 
   async function setPref(key: keyof Preferences, value: boolean) {
     const next = { ...prefs, [key]: value };
-    qc.setQueryData(["profile"], { ...profile, preferences: next });
-    const { error } = await supabase.from("profiles").update({ preferences: next }).eq("id", profile!.id);
-    if (error) {
+    try {
+      updateProfile({ preferences: { ...next } });
+    } catch {
       toast.error("Não foi possível salvar a preferência.");
-      await qc.invalidateQueries({ queryKey: ["profile"] });
     }
+    await qc.invalidateQueries({ queryKey: ["profile"] });
   }
 
   function exportCsv() {
@@ -90,45 +92,55 @@ function ProfilePage() {
         .join(","),
     );
     const blob = new Blob(["\ufeff" + [header.join(","), ...lines].join("\n")], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `gdshape-historico-${toISODate(new Date())}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    download(blob, `gdshape-historico-${toISODate(new Date())}.csv`);
     toast.success(`${rows.length} treinos exportados.`);
+  }
+
+  function saveBackup() {
+    download(new Blob([exportBackup()], { type: "application/json" }), `gdshape-backup-${toISODate(new Date())}.json`);
+    toast.success("Backup salvo. Guarde o arquivo em local seguro.");
+  }
+
+  async function pickBackup(file: File | undefined) {
+    if (fileRef.current) fileRef.current.value = "";
+    if (!file) return;
+    setRestoreText(await file.text());
+  }
+
+  async function restoreBackup() {
+    try {
+      importBackup(restoreText ?? "");
+      await qc.invalidateQueries();
+      toast.success("Backup restaurado.");
+      navigate({ to: "/" });
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setRestoreText(null);
+    }
   }
 
   async function resetProgram() {
     try {
       const start = normalizeStartDate(fromISODate(newStart));
-      const { error: e1 } = await supabase.from("programs").update({ status: "archived", archived_at: new Date().toISOString() }).eq("id", program!.id);
-      if (e1) throw e1;
-      const { error: e2 } = await supabase.from("programs").insert({ user_id: program!.user_id, start_date: start, total_weeks: 16 });
-      if (e2) throw e2;
+      startProgram(start);
       await qc.invalidateQueries();
       toast.success("Novo programa iniciado. Seu histórico foi mantido.");
-      navigate({ to: "/inicio" });
+      navigate({ to: "/" });
     } catch {
-      toast.error("Não foi possível redefinir. Verifique a conexão.");
+      toast.error("Não foi possível redefinir o programa.");
     }
   }
 
-  async function signOut() {
-    await qc.cancelQueries();
-    qc.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
-  }
 
   return (
     <div className="space-y-5">
-      <PageHeader back eyebrow="Conta e configurações" title="Perfil" />
+      <PageHeader back eyebrow="Configurações" title="Perfil" />
 
       <section className="rounded-3xl border border-border bg-card p-5">
         <div className="flex items-center gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-full border border-primary/60 bg-surface-raised font-display text-2xl font-bold glow-sm">
-            {(profile.display_name ?? "?").slice(0, 1).toUpperCase()}
+            {(profile.display_name ?? "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") || "?"}
           </div>
           <div className="min-w-0 flex-1">
             <label htmlFor="name" className="eyebrow">Nome</label>
@@ -162,9 +174,36 @@ function ProfilePage() {
         <Button variant="surface" size="xl" className="w-full justify-start" onClick={() => setResetOpen(true)}>
           <RotateCcw className="text-primary" /> Redefinir programa
         </Button>
-        <Button variant="surface" size="xl" className="w-full justify-start" onClick={() => setLogoutOpen(true)}>
-          <LogOut className="text-primary" /> Sair da conta
-        </Button>
+      </section>
+
+      <section className="rounded-3xl border border-border bg-card p-5">
+        <div className="flex items-start gap-3">
+          <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <div>
+            <p className="text-sm font-semibold">Dados salvos neste aparelho</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Seus treinos ficam guardados só neste navegador, sem conta e sem envio para a internet. Limpar os dados do
+              navegador apaga o histórico, então salve um backup de vez em quando — ele também serve para levar tudo
+              para outro aparelho.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Button variant="surface" className="h-12" onClick={saveBackup}>
+            <FileDown className="text-primary" /> Salvar backup
+          </Button>
+          <Button variant="surface" className="h-12" onClick={() => fileRef.current?.click()}>
+            <FileUp className="text-primary" /> Restaurar
+          </Button>
+        </div>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          aria-label="Arquivo de backup"
+          onChange={(e) => pickBackup(e.target.files?.[0])}
+        />
       </section>
 
       <ConfirmDialog
@@ -191,13 +230,14 @@ function ProfilePage() {
         onConfirm={resetProgram}
       />
       <ConfirmDialog
-        open={logoutOpen}
-        onOpenChange={setLogoutOpen}
-        title="Sair da conta?"
-        description="Seus registros ficam salvos e voltam quando você entrar novamente."
-        confirmLabel="Sair"
+        open={restoreText !== null}
+        onOpenChange={(o) => !o && setRestoreText(null)}
+        title="Restaurar backup?"
+        description="Os dados atuais deste aparelho serão substituídos pelos do arquivo escolhido."
+        confirmLabel="Restaurar"
         cancelLabel="Cancelar"
-        onConfirm={signOut}
+        onConfirm={restoreBackup}
+        destructive
       />
     </div>
   );
@@ -222,4 +262,13 @@ function PrefRow({ label, desc, checked, onChange }: { label: string; desc: stri
       <Switch checked={checked} onCheckedChange={onChange} />
     </label>
   );
+}
+
+function download(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

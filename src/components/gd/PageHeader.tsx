@@ -22,7 +22,7 @@ export function PageHeader({
       <div className="flex min-w-0 items-end gap-2">
         {back && (
           <button
-            onClick={() => (window.history.length > 1 ? router.history.back() : router.navigate({ to: "/inicio" }))}
+            onClick={() => (window.history.length > 1 ? router.history.back() : router.navigate({ to: "/" }))}
             aria-label="Voltar"
             className="-ml-2 mb-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground hover:bg-secondary"
           >

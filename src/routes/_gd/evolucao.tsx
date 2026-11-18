@@ -12,7 +12,7 @@ import { ensureAppData } from "@/lib/data";
 import { LETTERS } from "@/lib/program-data";
 import { completionPercent, fromISODate, scheduledTrainingDaysUntil, TOTAL_TRAINING_DAYS, trainingStreak } from "@/lib/schedule";
 
-export const Route = createFileRoute("/_authenticated/evolucao")({
+export const Route = createFileRoute("/_gd/evolucao")({
   head: () => ({
     meta: [
       { title: "Evolução — GDshape" },

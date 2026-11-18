@@ -1,13 +1,49 @@
 import { queryOptions, type QueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 import type { WorkoutLetter } from "./program-data";
 import type { ProgramDay } from "./schedule";
 
-export type ProgramRow = Database["public"]["Tables"]["programs"]["Row"];
-export type SessionRow = Database["public"]["Tables"]["workout_sessions"]["Row"];
-export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+/*
+ * Armazenamento pessoal, sem login: todos os registros ficam salvos no navegador
+ * deste aparelho (localStorage). Nada é enviado para servidores, então ninguém
+ * mais consegue ler ou alterar os dados. Backup/restauração em JSON permite
+ * levar o histórico para outro aparelho.
+ */
+
 export type SessionStatus = "in_progress" | "completed" | "voided";
+
+export interface ProfileRow {
+  id: string;
+  display_name: string | null;
+  preferences: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+export interface ProgramRow {
+  id: string;
+  user_id: string;
+  name: string;
+  start_date: string;
+  total_weeks: number;
+  status: "active" | "archived";
+  archived_at: string | null;
+  created_at: string;
+}
+export interface SessionRow {
+  id: string;
+  user_id: string;
+  program_id: string;
+  session_date: string;
+  workout_letter: string;
+  week_number: number;
+  phase_number: number;
+  status: string;
+  started_at: string | null;
+  completed_at: string | null;
+  voided_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+export type PendingRow = Omit<SessionRow, "created_at" | "updated_at">;
 
 export interface Preferences {
   showMotivation: boolean;
@@ -20,180 +56,84 @@ export function readPrefs(profile: ProfileRow | null): Preferences {
   return { ...DEFAULT_PREFS, ...p };
 }
 
-/* ---------- identidade local (funciona sem rede) ---------- */
+export const LOCAL_USER_ID = "local";
+export const PROGRAM_NAME = "Treino Avançado Masculino";
+export const STORE_KEY = "gdshape:v1";
 
-export async function getLocalUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.user.id ?? null;
+export interface Store {
+  version: 1;
+  profile: ProfileRow;
+  programs: ProgramRow[];
+  sessions: SessionRow[];
 }
 
-/* ---------- cache local para consulta offline ---------- */
+const nowISO = () => new Date().toISOString();
+
+function emptyStore(): Store {
+  const now = nowISO();
+  return {
+    version: 1,
+    profile: { id: LOCAL_USER_ID, display_name: null, preferences: {}, created_at: now, updated_at: now },
+    programs: [],
+    sessions: [],
+  };
+}
 
 const hasStorage = () => typeof window !== "undefined" && !!window.localStorage;
-const cacheKey = (uid: string, key: string) => `gd:cache:${uid}:${key}`;
 
-function readCache<T>(uid: string, key: string): T | undefined {
-  if (!hasStorage()) return undefined;
-  const raw = localStorage.getItem(cacheKey(uid, key));
-  return raw ? (JSON.parse(raw) as T) : undefined;
-}
-function writeCache(uid: string, key: string, value: unknown) {
-  if (hasStorage()) localStorage.setItem(cacheKey(uid, key), JSON.stringify(value));
-}
-
-export function isNetworkError(err: unknown): boolean {
-  if (typeof navigator !== "undefined" && !navigator.onLine) return true;
-  const msg = String((err as { message?: string })?.message ?? err ?? "");
-  return /failed to fetch|network|load failed|fetch failed|networkerror/i.test(msg);
-}
-
-async function withCache<T>(key: string, fetcher: (uid: string) => Promise<T>): Promise<T> {
-  const uid = await getLocalUserId();
-  if (!uid) throw new Error("Sessão expirada");
+export function loadStore(): Store {
+  if (!hasStorage()) return emptyStore();
+  const raw = localStorage.getItem(STORE_KEY);
+  if (!raw) return emptyStore();
   try {
-    const value = await fetcher(uid);
-    writeCache(uid, key, value);
-    return value;
-  } catch (err) {
-    const cached = readCache<T>(uid, key);
-    if (cached !== undefined && isNetworkError(err)) return cached;
-    if (cached !== undefined && typeof navigator !== "undefined" && !navigator.onLine) return cached;
-    throw err;
+    return parseStore(JSON.parse(raw));
+  } catch {
+    return emptyStore();
   }
 }
 
-/* ---------- fila de ações pendentes ---------- */
-
-export type PendingRow = Omit<SessionRow, "created_at" | "updated_at">;
-const queueKey = (uid: string) => `gd:queue:${uid}`;
-
-export function readQueue(uid: string): PendingRow[] {
-  if (!hasStorage()) return [];
-  return JSON.parse(localStorage.getItem(queueKey(uid)) ?? "[]") as PendingRow[];
-}
-function writeQueue(uid: string, rows: PendingRow[]) {
-  if (hasStorage()) localStorage.setItem(queueKey(uid), JSON.stringify(rows));
-}
-function enqueue(uid: string, row: PendingRow) {
-  const q = readQueue(uid).filter((r) => r.id !== row.id);
-  q.push(row);
-  writeQueue(uid, q);
+function saveStore(store: Store) {
+  if (!hasStorage()) throw new Error("Armazenamento indisponível neste navegador.");
+  localStorage.setItem(STORE_KEY, JSON.stringify(store));
 }
 
-let flushing: Promise<{ synced: number; pending: number; rejected: number }> | null = null;
+function update(mutator: (s: Store) => void): Store {
+  const s = loadStore();
+  mutator(s);
+  saveStore(s);
+  return s;
+}
 
-/** Envia ao servidor as ações registradas sem conexão. Idempotente: cada linha tem id próprio. */
-export function flushQueue() {
-  if (flushing) return flushing;
-  flushing = (async () => {
-    const uid = await getLocalUserId();
-    if (!uid) return { synced: 0, pending: 0, rejected: 0 };
-    let synced = 0;
-    let rejected = 0;
-    const queue = readQueue(uid);
-    const remaining: PendingRow[] = [];
-    for (let i = 0; i < queue.length; i++) {
-      const row = queue[i]!;
-      const { error } = await supabase.from("workout_sessions").upsert(row, { onConflict: "id" });
-      if (!error) {
-        synced++;
-        continue;
-      }
-      if (isNetworkError(error)) {
-        remaining.push(...queue.slice(i));
-        break;
-      }
-      // Conflito (dia já registrado) ou regra do servidor: descarta para não duplicar.
-      console.warn("Ação descartada na sincronização", error);
-      rejected++;
-    }
-    writeQueue(uid, remaining);
-    return { synced, pending: remaining.length, rejected };
-  })().finally(() => {
-    flushing = null;
-  });
-  return flushing;
+/** Pede ao navegador para não apagar os dados automaticamente quando faltar espaço. */
+export function requestPersistentStorage() {
+  if (typeof navigator !== "undefined" && navigator.storage?.persist) void navigator.storage.persist().catch(() => {});
 }
 
 /* ---------- consultas ---------- */
 
 export const profileQuery = () =>
-  queryOptions({
-    queryKey: ["profile"],
-    networkMode: "always",
-    queryFn: () =>
-      withCache<ProfileRow | null>("profile", async (uid) => {
-        const { data, error } = await supabase.from("profiles").select("*").eq("id", uid).maybeSingle();
-        if (error) throw error;
-        return data;
-      }),
-  });
+  queryOptions({ queryKey: ["profile"], networkMode: "always", queryFn: async () => loadStore().profile });
 
 export const programQuery = () =>
   queryOptions({
     queryKey: ["program"],
     networkMode: "always",
-    queryFn: () =>
-      withCache<ProgramRow | null>("program", async (uid) => {
-        const { data, error } = await supabase
-          .from("programs")
-          .select("*")
-          .eq("user_id", uid)
-          .eq("status", "active")
-          .maybeSingle();
-        if (error) throw error;
-        return data;
-      }),
+    queryFn: async () => loadStore().programs.find((p) => p.status === "active") ?? null,
   });
 
 export const programsQuery = () =>
   queryOptions({
     queryKey: ["programs"],
     networkMode: "always",
-    queryFn: () =>
-      withCache<ProgramRow[]>("programs", async (uid) => {
-        const { data, error } = await supabase
-          .from("programs")
-          .select("*")
-          .eq("user_id", uid)
-          .order("created_at", { ascending: false });
-        if (error) throw error;
-        return data ?? [];
-      }),
+    queryFn: async () => [...loadStore().programs].sort((a, b) => b.created_at.localeCompare(a.created_at)),
   });
 
 export const sessionsQuery = () =>
   queryOptions({
     queryKey: ["sessions"],
     networkMode: "always",
-    queryFn: async () => {
-      const rows = await withCache<SessionRow[]>("sessions", async (uid) => {
-        const { data, error } = await supabase
-          .from("workout_sessions")
-          .select("*")
-          .eq("user_id", uid)
-          .order("session_date", { ascending: true })
-          .range(0, 4999);
-        if (error) throw error;
-        return data ?? [];
-      });
-      const uid = await getLocalUserId();
-      return mergePending(rows, uid ? readQueue(uid) : []);
-    },
+    queryFn: async () => [...loadStore().sessions].sort((a, b) => a.session_date.localeCompare(b.session_date)),
   });
-
-export function mergePending(rows: SessionRow[], pending: PendingRow[]): SessionRow[] {
-  const byId = new Map(rows.map((r) => [r.id, r]));
-  for (const p of pending) {
-    const prev = byId.get(p.id);
-    byId.set(p.id, {
-      ...p,
-      created_at: prev?.created_at ?? new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
-  }
-  return [...byId.values()].sort((a, b) => a.session_date.localeCompare(b.session_date));
-}
 
 export async function ensureAppData(qc: QueryClient) {
   await Promise.all([
@@ -201,6 +141,37 @@ export async function ensureAppData(qc: QueryClient) {
     qc.ensureQueryData(programQuery()),
     qc.ensureQueryData(sessionsQuery()),
   ]);
+}
+
+export function refreshAll(qc: QueryClient) {
+  return qc.invalidateQueries();
+}
+
+/* ---------- perfil e programa ---------- */
+
+export function updateProfile(patch: Partial<Pick<ProfileRow, "display_name" | "preferences">>) {
+  update((s) => {
+    s.profile = { ...s.profile, ...patch, updated_at: nowISO() };
+  });
+}
+
+/** Inicia um novo ciclo de 16 semanas. Um programa ativo anterior é arquivado; o histórico é mantido. */
+export function startProgram(startDate: string): ProgramRow {
+  const program: ProgramRow = {
+    id: crypto.randomUUID(),
+    user_id: LOCAL_USER_ID,
+    name: PROGRAM_NAME,
+    start_date: startDate,
+    total_weeks: 16,
+    status: "active",
+    archived_at: null,
+    created_at: nowISO(),
+  };
+  update((s) => {
+    for (const p of s.programs) if (p.status === "active") Object.assign(p, { status: "archived", archived_at: nowISO() });
+    s.programs.push(program);
+  });
+  return program;
 }
 
 /* ---------- regras de sessão ---------- */
@@ -259,17 +230,79 @@ function newRow(userId: string, programId: string, day: ProgramDay, patch: Parti
   };
 }
 
-/** Registra a mudança localmente (aparece na hora) e tenta sincronizar. */
+/** Grava a mudança. Impede um segundo registro válido para o mesmo dia e programa. */
+export function saveSession(row: PendingRow) {
+  update((s) => {
+    if (row.status !== "voided") {
+      const clash = s.sessions.find(
+        (x) => x.id !== row.id && x.program_id === row.program_id && x.session_date === row.session_date && x.status !== "voided",
+      );
+      if (clash) throw new Error("Este dia já possui um registro.");
+    }
+    const prev = s.sessions.find((x) => x.id === row.id);
+    const next: SessionRow = { ...row, created_at: prev?.created_at ?? nowISO(), updated_at: nowISO() };
+    s.sessions = prev ? s.sessions.map((x) => (x.id === row.id ? next : x)) : [...s.sessions, next];
+  });
+}
+
 export async function commitSessionChange(qc: QueryClient, row: PendingRow) {
-  const uid = await getLocalUserId();
-  if (!uid) throw new Error("Sessão expirada");
-  enqueue(uid, row);
-  qc.setQueryData<SessionRow[]>(["sessions"], (old) => mergePending(old ?? [], [row]));
-  const res = await flushQueue();
-  if (res.rejected > 0) {
-    await qc.invalidateQueries({ queryKey: ["sessions"] });
-    throw new Error("Este dia já possui um registro.");
+  saveSession(row);
+  await qc.invalidateQueries({ queryKey: ["sessions"] });
+}
+
+/* ---------- backup ---------- */
+
+export function exportBackup(): string {
+  return JSON.stringify({ app: "gdshape", exported_at: nowISO(), ...loadStore() }, null, 2);
+}
+
+/** Substitui os dados deste aparelho pelos do arquivo de backup. Lança erro se o arquivo for inválido. */
+export function importBackup(json: string): Store {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json);
+  } catch {
+    throw new Error("Arquivo de backup inválido.");
   }
-  if (res.pending === 0) await qc.invalidateQueries({ queryKey: ["sessions"] });
-  return { offline: res.pending > 0 };
+  const store = parseStore(parsed);
+  saveStore(store);
+  return store;
+}
+
+const isStr = (v: unknown): v is string => typeof v === "string";
+const isDate = (v: unknown) => isStr(v) && /^\d{4}-\d{2}-\d{2}$/.test(v);
+
+function parseStore(input: unknown): Store {
+  const o = input as Partial<Store> | null;
+  if (!o || typeof o !== "object" || !Array.isArray(o.programs) || !Array.isArray(o.sessions) || !o.profile) {
+    throw new Error("Arquivo de backup inválido.");
+  }
+  const base = emptyStore();
+  const prof = o.profile as Partial<ProfileRow>;
+  const profile: ProfileRow = {
+    ...base.profile,
+    display_name: isStr(prof.display_name) ? prof.display_name : null,
+    preferences: prof.preferences && typeof prof.preferences === "object" ? prof.preferences : {},
+  };
+  const programs = o.programs.filter(
+    (p): p is ProgramRow => !!p && isStr(p.id) && isDate(p.start_date) && (p.status === "active" || p.status === "archived"),
+  );
+  const sessions = o.sessions.filter(
+    (s): s is SessionRow =>
+      !!s &&
+      isStr(s.id) &&
+      isStr(s.program_id) &&
+      isDate(s.session_date) &&
+      ["in_progress", "completed", "voided"].includes(s.status) &&
+      ["A", "B", "C", "D", "E"].includes(s.workout_letter),
+  );
+  // No máximo um programa ativo.
+  let seenActive = false;
+  for (const p of [...programs].sort((a, b) => b.created_at.localeCompare(a.created_at))) {
+    if (p.status === "active") {
+      if (seenActive) p.status = "archived";
+      seenActive = true;
+    }
+  }
+  return { version: 1, profile, programs, sessions };
 }

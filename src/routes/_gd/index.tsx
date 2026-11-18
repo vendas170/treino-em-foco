@@ -15,12 +15,12 @@ import { WORKOUTS, getPhase } from "@/lib/program-data";
 import { completionPercent, fromISODate, getProgramDay, getWeekDays, TOTAL_TRAINING_DAYS } from "@/lib/schedule";
 import { addDays } from "date-fns";
 
-export const Route = createFileRoute("/_authenticated/inicio")({
+export const Route = createFileRoute("/_gd/")({
   head: () => ({
     meta: [
-      { title: "Início — GDshape" },
+      { title: "GDshape — Treino de hoje" },
       { name: "description", content: "Seu treino de hoje, a semana atual e o progresso das 16 semanas." },
-      { property: "og:title", content: "Início — GDshape" },
+      { property: "og:title", content: "GDshape — Treino de hoje" },
       { property: "og:description", content: "Seu treino de hoje e o progresso das 16 semanas." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -85,7 +85,7 @@ function Dashboard() {
         </div>
         <div className="col-span-2 grid grid-cols-2 gap-3">
           <Stat label="Concluídos" value={`${completed.length}`} sub={`de ${TOTAL_TRAINING_DAYS}`} />
-          <Stat label="Restam na semana" value={`${remaining}`} sub={remaining === 1 ? "treino" : "treinos"} />
+          <Stat label="Faltam" value={`${remaining}`} sub="na semana" />
           <Link to="/programa" className="col-span-2 flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
             <div>
               <p className="eyebrow">Fase {phase} · Semanas {phaseInfo.weeks[0]}–{phaseInfo.weeks[1]}</p>

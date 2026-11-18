@@ -8,7 +8,7 @@ import { ensureAppData } from "@/lib/data";
 import { LETTERS, PHASES, WORKOUTS, getExercises, getPhase } from "@/lib/program-data";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/treinos")({
+export const Route = createFileRoute("/_gd/treinos")({
   head: () => ({
     meta: [
       { title: "Treinos — GDshape" },

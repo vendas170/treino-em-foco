@@ -9,140 +9,109 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthenticatedCalendarioRouteImport } from './routes/_authenticated/calendario'
-import { Route as AuthenticatedEvolucaoRouteImport } from './routes/_authenticated/evolucao'
-import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
-import { Route as AuthenticatedInicioRouteImport } from './routes/_authenticated/inicio'
-import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
-import { Route as AuthenticatedProgramaRouteImport } from './routes/_authenticated/programa'
-import { Route as AuthenticatedTreinosRouteImport } from './routes/_authenticated/treinos'
-import { Route as AuthenticatedTreinoDataRouteImport } from './routes/_authenticated/treino.$data'
-import { Route as AuthenticatedFichaFaseLetraRouteImport } from './routes/_authenticated/ficha.$fase.$letra'
+import { Route as GdRouteRouteImport } from './routes/_gd/route'
+import { Route as GdIndexRouteImport } from './routes/_gd/index'
+import { Route as GdCalendarioRouteImport } from './routes/_gd/calendario'
+import { Route as GdEvolucaoRouteImport } from './routes/_gd/evolucao'
+import { Route as GdHistoricoRouteImport } from './routes/_gd/historico'
+import { Route as GdPerfilRouteImport } from './routes/_gd/perfil'
+import { Route as GdProgramaRouteImport } from './routes/_gd/programa'
+import { Route as GdTreinosRouteImport } from './routes/_gd/treinos'
+import { Route as GdTreinoDataRouteImport } from './routes/_gd/treino.$data'
+import { Route as GdFichaFaseLetraRouteImport } from './routes/_gd/ficha.$fase.$letra'
 
-const IndexRoute = IndexRouteImport.update({
+const GdRouteRoute = GdRouteRouteImport.update({
+  id: '/_gd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GdIndexRoute = GdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedCalendarioRoute = AuthenticatedCalendarioRouteImport.update({
+const GdCalendarioRoute = GdCalendarioRouteImport.update({
   id: '/calendario',
   path: '/calendario',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedEvolucaoRoute = AuthenticatedEvolucaoRouteImport.update({
+const GdEvolucaoRoute = GdEvolucaoRouteImport.update({
   id: '/evolucao',
   path: '/evolucao',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
+const GdHistoricoRoute = GdHistoricoRouteImport.update({
   id: '/historico',
   path: '/historico',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedInicioRoute = AuthenticatedInicioRouteImport.update({
-  id: '/inicio',
-  path: '/inicio',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+const GdPerfilRoute = GdPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedProgramaRoute = AuthenticatedProgramaRouteImport.update({
+const GdProgramaRoute = GdProgramaRouteImport.update({
   id: '/programa',
   path: '/programa',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedTreinosRoute = AuthenticatedTreinosRouteImport.update({
+const GdTreinosRoute = GdTreinosRouteImport.update({
   id: '/treinos',
   path: '/treinos',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedTreinoDataRoute = AuthenticatedTreinoDataRouteImport.update({
+const GdTreinoDataRoute = GdTreinoDataRouteImport.update({
   id: '/treino/$data',
   path: '/treino/$data',
-  getParentRoute: () => AuthenticatedRouteRoute,
+  getParentRoute: () => GdRouteRoute,
 } as any)
-const AuthenticatedFichaFaseLetraRoute =
-  AuthenticatedFichaFaseLetraRouteImport.update({
-    id: '/ficha/$fase/$letra',
-    path: '/ficha/$fase/$letra',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+const GdFichaFaseLetraRoute = GdFichaFaseLetraRouteImport.update({
+  id: '/ficha/$fase/$letra',
+  path: '/ficha/$fase/$letra',
+  getParentRoute: () => GdRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/calendario': typeof AuthenticatedCalendarioRoute
-  '/evolucao': typeof AuthenticatedEvolucaoRoute
-  '/historico': typeof AuthenticatedHistoricoRoute
-  '/inicio': typeof AuthenticatedInicioRoute
-  '/perfil': typeof AuthenticatedPerfilRoute
-  '/programa': typeof AuthenticatedProgramaRoute
-  '/treinos': typeof AuthenticatedTreinosRoute
-  '/treino/$data': typeof AuthenticatedTreinoDataRoute
-  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
+  '/': typeof GdIndexRoute
+  '/calendario': typeof GdCalendarioRoute
+  '/evolucao': typeof GdEvolucaoRoute
+  '/historico': typeof GdHistoricoRoute
+  '/perfil': typeof GdPerfilRoute
+  '/programa': typeof GdProgramaRoute
+  '/treinos': typeof GdTreinosRoute
+  '/treino/$data': typeof GdTreinoDataRoute
+  '/ficha/$fase/$letra': typeof GdFichaFaseLetraRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/calendario': typeof AuthenticatedCalendarioRoute
-  '/evolucao': typeof AuthenticatedEvolucaoRoute
-  '/historico': typeof AuthenticatedHistoricoRoute
-  '/inicio': typeof AuthenticatedInicioRoute
-  '/perfil': typeof AuthenticatedPerfilRoute
-  '/programa': typeof AuthenticatedProgramaRoute
-  '/treinos': typeof AuthenticatedTreinosRoute
-  '/treino/$data': typeof AuthenticatedTreinoDataRoute
-  '/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
+  '/calendario': typeof GdCalendarioRoute
+  '/evolucao': typeof GdEvolucaoRoute
+  '/historico': typeof GdHistoricoRoute
+  '/perfil': typeof GdPerfilRoute
+  '/programa': typeof GdProgramaRoute
+  '/treinos': typeof GdTreinosRoute
+  '/': typeof GdIndexRoute
+  '/treino/$data': typeof GdTreinoDataRoute
+  '/ficha/$fase/$letra': typeof GdFichaFaseLetraRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/_authenticated/calendario': typeof AuthenticatedCalendarioRoute
-  '/_authenticated/evolucao': typeof AuthenticatedEvolucaoRoute
-  '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
-  '/_authenticated/inicio': typeof AuthenticatedInicioRoute
-  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
-  '/_authenticated/programa': typeof AuthenticatedProgramaRoute
-  '/_authenticated/treinos': typeof AuthenticatedTreinosRoute
-  '/_authenticated/treino/$data': typeof AuthenticatedTreinoDataRoute
-  '/_authenticated/ficha/$fase/$letra': typeof AuthenticatedFichaFaseLetraRoute
+  '/_gd': typeof GdRouteRouteWithChildren
+  '/_gd/calendario': typeof GdCalendarioRoute
+  '/_gd/evolucao': typeof GdEvolucaoRoute
+  '/_gd/historico': typeof GdHistoricoRoute
+  '/_gd/perfil': typeof GdPerfilRoute
+  '/_gd/programa': typeof GdProgramaRoute
+  '/_gd/treinos': typeof GdTreinosRoute
+  '/_gd/': typeof GdIndexRoute
+  '/_gd/treino/$data': typeof GdTreinoDataRoute
+  '/_gd/ficha/$fase/$letra': typeof GdFichaFaseLetraRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
-    | '/reset-password'
     | '/calendario'
     | '/evolucao'
     | '/historico'
-    | '/inicio'
     | '/perfil'
     | '/programa'
     | '/treinos'
@@ -150,170 +119,137 @@ export interface FileRouteTypes {
     | '/ficha/$fase/$letra'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/auth'
-    | '/reset-password'
     | '/calendario'
     | '/evolucao'
     | '/historico'
-    | '/inicio'
     | '/perfil'
     | '/programa'
     | '/treinos'
+    | '/'
     | '/treino/$data'
     | '/ficha/$fase/$letra'
   id:
     | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/auth'
-    | '/reset-password'
-    | '/_authenticated/calendario'
-    | '/_authenticated/evolucao'
-    | '/_authenticated/historico'
-    | '/_authenticated/inicio'
-    | '/_authenticated/perfil'
-    | '/_authenticated/programa'
-    | '/_authenticated/treinos'
-    | '/_authenticated/treino/$data'
-    | '/_authenticated/ficha/$fase/$letra'
+    | '/_gd'
+    | '/_gd/calendario'
+    | '/_gd/evolucao'
+    | '/_gd/historico'
+    | '/_gd/perfil'
+    | '/_gd/programa'
+    | '/_gd/treinos'
+    | '/_gd/'
+    | '/_gd/treino/$data'
+    | '/_gd/ficha/$fase/$letra'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
-  ResetPasswordRoute: typeof ResetPasswordRoute
+  GdRouteRoute: typeof GdRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_gd': {
+      id: '/_gd'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      preLoaderRoute: typeof GdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_gd/': {
+      id: '/_gd/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof GdIndexRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/calendario': {
-      id: '/_authenticated/calendario'
+    '/_gd/calendario': {
+      id: '/_gd/calendario'
       path: '/calendario'
       fullPath: '/calendario'
-      preLoaderRoute: typeof AuthenticatedCalendarioRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdCalendarioRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/evolucao': {
-      id: '/_authenticated/evolucao'
+    '/_gd/evolucao': {
+      id: '/_gd/evolucao'
       path: '/evolucao'
       fullPath: '/evolucao'
-      preLoaderRoute: typeof AuthenticatedEvolucaoRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdEvolucaoRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/historico': {
-      id: '/_authenticated/historico'
+    '/_gd/historico': {
+      id: '/_gd/historico'
       path: '/historico'
       fullPath: '/historico'
-      preLoaderRoute: typeof AuthenticatedHistoricoRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdHistoricoRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/inicio': {
-      id: '/_authenticated/inicio'
-      path: '/inicio'
-      fullPath: '/inicio'
-      preLoaderRoute: typeof AuthenticatedInicioRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/perfil': {
-      id: '/_authenticated/perfil'
+    '/_gd/perfil': {
+      id: '/_gd/perfil'
       path: '/perfil'
       fullPath: '/perfil'
-      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdPerfilRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/programa': {
-      id: '/_authenticated/programa'
+    '/_gd/programa': {
+      id: '/_gd/programa'
       path: '/programa'
       fullPath: '/programa'
-      preLoaderRoute: typeof AuthenticatedProgramaRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdProgramaRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/treinos': {
-      id: '/_authenticated/treinos'
+    '/_gd/treinos': {
+      id: '/_gd/treinos'
       path: '/treinos'
       fullPath: '/treinos'
-      preLoaderRoute: typeof AuthenticatedTreinosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdTreinosRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/treino/$data': {
-      id: '/_authenticated/treino/$data'
+    '/_gd/treino/$data': {
+      id: '/_gd/treino/$data'
       path: '/treino/$data'
       fullPath: '/treino/$data'
-      preLoaderRoute: typeof AuthenticatedTreinoDataRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdTreinoDataRouteImport
+      parentRoute: typeof GdRouteRoute
     }
-    '/_authenticated/ficha/$fase/$letra': {
-      id: '/_authenticated/ficha/$fase/$letra'
+    '/_gd/ficha/$fase/$letra': {
+      id: '/_gd/ficha/$fase/$letra'
       path: '/ficha/$fase/$letra'
       fullPath: '/ficha/$fase/$letra'
-      preLoaderRoute: typeof AuthenticatedFichaFaseLetraRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof GdFichaFaseLetraRouteImport
+      parentRoute: typeof GdRouteRoute
     }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedCalendarioRoute: typeof AuthenticatedCalendarioRoute
-  AuthenticatedEvolucaoRoute: typeof AuthenticatedEvolucaoRoute
-  AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
-  AuthenticatedInicioRoute: typeof AuthenticatedInicioRoute
-  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
-  AuthenticatedProgramaRoute: typeof AuthenticatedProgramaRoute
-  AuthenticatedTreinosRoute: typeof AuthenticatedTreinosRoute
-  AuthenticatedTreinoDataRoute: typeof AuthenticatedTreinoDataRoute
-  AuthenticatedFichaFaseLetraRoute: typeof AuthenticatedFichaFaseLetraRoute
+interface GdRouteRouteChildren {
+  GdCalendarioRoute: typeof GdCalendarioRoute
+  GdEvolucaoRoute: typeof GdEvolucaoRoute
+  GdHistoricoRoute: typeof GdHistoricoRoute
+  GdPerfilRoute: typeof GdPerfilRoute
+  GdProgramaRoute: typeof GdProgramaRoute
+  GdTreinosRoute: typeof GdTreinosRoute
+  GdIndexRoute: typeof GdIndexRoute
+  GdTreinoDataRoute: typeof GdTreinoDataRoute
+  GdFichaFaseLetraRoute: typeof GdFichaFaseLetraRoute
 }
 
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedCalendarioRoute: AuthenticatedCalendarioRoute,
-  AuthenticatedEvolucaoRoute: AuthenticatedEvolucaoRoute,
-  AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
-  AuthenticatedInicioRoute: AuthenticatedInicioRoute,
-  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
-  AuthenticatedProgramaRoute: AuthenticatedProgramaRoute,
-  AuthenticatedTreinosRoute: AuthenticatedTreinosRoute,
-  AuthenticatedTreinoDataRoute: AuthenticatedTreinoDataRoute,
-  AuthenticatedFichaFaseLetraRoute: AuthenticatedFichaFaseLetraRoute,
+const GdRouteRouteChildren: GdRouteRouteChildren = {
+  GdCalendarioRoute: GdCalendarioRoute,
+  GdEvolucaoRoute: GdEvolucaoRoute,
+  GdHistoricoRoute: GdHistoricoRoute,
+  GdPerfilRoute: GdPerfilRoute,
+  GdProgramaRoute: GdProgramaRoute,
+  GdTreinosRoute: GdTreinosRoute,
+  GdIndexRoute: GdIndexRoute,
+  GdTreinoDataRoute: GdTreinoDataRoute,
+  GdFichaFaseLetraRoute: GdFichaFaseLetraRoute,
 }
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const GdRouteRouteWithChildren =
+  GdRouteRoute._addFileChildren(GdRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
-  ResetPasswordRoute: ResetPasswordRoute,
+  GdRouteRoute: GdRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

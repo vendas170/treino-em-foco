@@ -12,7 +12,7 @@ import { LETTERS, PHASES, WORKOUTS, type WorkoutLetter } from "@/lib/program-dat
 import { fromISODate } from "@/lib/schedule";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/historico")({
+export const Route = createFileRoute("/_gd/historico")({
   head: () => ({
     meta: [
       { title: "Histórico — GDshape" },

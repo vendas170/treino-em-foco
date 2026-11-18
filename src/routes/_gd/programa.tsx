@@ -10,7 +10,7 @@ import { FINAL_NOTES, GENERAL_GUIDELINES, PHASES, ROTATION_NOTE, TECHNIQUES } fr
 import { fromISODate } from "@/lib/schedule";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/programa")({
+export const Route = createFileRoute("/_gd/programa")({
   head: () => ({
     meta: [
       { title: "Meu programa — GDshape" },

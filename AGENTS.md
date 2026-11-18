@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Personal single-user app with no sign-in: all workout data lives in the browser's localStorage (`src/lib/data.ts`), with JSON backup/restore in Perfil; app routes sit under the pathless `_gd` layout with `ssr: false` because the server cannot read device storage. Why: the owner asked to remove login without exposing the database publicly.

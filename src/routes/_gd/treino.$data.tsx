@@ -14,7 +14,7 @@ import { ensureAppData } from "@/lib/data";
 import { getExercises } from "@/lib/program-data";
 import { fromISODate, getProgramDay } from "@/lib/schedule";
 
-export const Route = createFileRoute("/_authenticated/treino/$data")({
+export const Route = createFileRoute("/_gd/treino/$data")({
   head: () => ({
     meta: [
       { title: "Sessão de treino — GDshape" },
@@ -57,7 +57,7 @@ function SessionScreen() {
             {day?.kind === "rest" ? "Dia de descanso programado. Nenhum treino a registrar." : "Esta data está fora das 16 semanas do programa."}
           </p>
           <Button asChild variant="surface" className="mt-5">
-            <Link to="/inicio">Voltar ao início</Link>
+            <Link to="/">Voltar ao início</Link>
           </Button>
         </div>
       </div>
@@ -115,12 +115,12 @@ function SessionScreen() {
                 <RotateCcw /> Corrigir registro
               </Button>
               <Button asChild variant="outline-neon" size="xl" className="flex-1">
-                <Link to="/inicio">Início</Link>
+                <Link to="/">Início</Link>
               </Button>
             </div>
           ) : status === "in_progress" ? (
             <div className="flex gap-2">
-              <Button variant="surface" size="xl" className="w-28" onClick={() => navigate({ to: "/inicio" })}>
+              <Button variant="surface" size="xl" className="w-28" onClick={() => navigate({ to: "/" })}>
                 <Pause /> Pausar
               </Button>
               <Button variant="hero" size="xl" className="flex-1" onClick={() => setConfirm(true)} disabled={busy}>
@@ -169,7 +169,7 @@ function SessionScreen() {
           <p className="mt-3 text-sm text-muted-foreground">
             Treino {day.letter} · {format(new Date(), "HH:mm")} · Semana {day.week}
           </p>
-          <Button variant="hero" size="xl" className="mt-10 w-full max-w-xs" onClick={() => navigate({ to: "/inicio" })}>
+          <Button variant="hero" size="xl" className="mt-10 w-full max-w-xs" onClick={() => navigate({ to: "/" })}>
             Voltar ao início
           </Button>
           <Button variant="link" className="mt-2 text-muted-foreground" onClick={() => setCelebrate(false)}>

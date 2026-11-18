@@ -14,7 +14,7 @@ import { WORKOUTS } from "@/lib/program-data";
 import { fromISODate, getProgramDay, toISODate, type ProgramDay } from "@/lib/schedule";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_authenticated/calendario")({
+export const Route = createFileRoute("/_gd/calendario")({
   head: () => ({
     meta: [
       { title: "Calendário — GDshape" },

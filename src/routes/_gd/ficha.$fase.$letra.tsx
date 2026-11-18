@@ -8,7 +8,7 @@ import { useGD } from "@/hooks/use-gd";
 import { ensureAppData } from "@/lib/data";
 import { LETTERS, PHASES, getExercises, getPhase, type WorkoutLetter } from "@/lib/program-data";
 
-export const Route = createFileRoute("/_authenticated/ficha/$fase/$letra")({
+export const Route = createFileRoute("/_gd/ficha/$fase/$letra")({
   head: () => ({
     meta: [
       { title: "Ficha de treino — GDshape" },

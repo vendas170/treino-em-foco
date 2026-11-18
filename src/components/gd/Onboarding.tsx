@@ -5,28 +5,25 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { Wordmark } from "./Logo";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { fromISODate, normalizeStartDate, toISODate } from "@/lib/schedule";
-import { getLocalUserId } from "@/lib/data";
+import { startProgram, updateProfile } from "@/lib/data";
 
 export function Onboarding() {
   const qc = useQueryClient();
   const [date, setDate] = useState(toISODate(new Date()));
+  const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
   const start = normalizeStartDate(fromISODate(date));
 
   async function create() {
     setSaving(true);
     try {
-      const uid = await getLocalUserId();
-      if (!uid) throw new Error("Sessão expirada");
-      const { error } = await supabase.from("programs").insert({ user_id: uid, start_date: start, total_weeks: 16 });
-      if (error) throw error;
-      await qc.invalidateQueries({ queryKey: ["program"] });
-      await qc.invalidateQueries({ queryKey: ["programs"] });
+      if (name.trim()) updateProfile({ display_name: name.trim() });
+      startProgram(start);
+      await qc.invalidateQueries();
       toast.success("Programa iniciado. Bora treinar!");
     } catch (e) {
-      toast.error(navigator.onLine ? (e as Error).message : "Conecte-se à internet para iniciar o programa.");
+      toast.error((e as Error).message);
     } finally {
       setSaving(false);
     }
@@ -47,6 +44,17 @@ export function Onboarding() {
         </p>
       </div>
       <div className="rounded-2xl border border-border bg-card p-5">
+        <label htmlFor="name" className="eyebrow">
+          Seu nome (opcional)
+        </label>
+        <input
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Como quer ser chamado"
+          autoComplete="given-name"
+          className="mt-2 mb-5 h-12 w-full rounded-xl border border-input bg-background px-4 text-base font-semibold text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        />
         <label htmlFor="start" className="eyebrow">
           Data de início
         </label>

@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { BarChart3, CalendarDays, Dumbbell, History, Home } from "lucide-react";
 
 const items = [
-  { to: "/inicio", label: "Início", icon: Home },
+  { to: "/", label: "Início", icon: Home },
   { to: "/treinos", label: "Treinos", icon: Dumbbell },
   { to: "/calendario", label: "Calendário", icon: CalendarDays },
   { to: "/historico", label: "Histórico", icon: History },
@@ -17,6 +17,7 @@ export function BottomNav() {
           <li key={to}>
             <Link
               to={to}
+              activeOptions={{ exact: to === "/" }}
               className="group flex flex-col items-center gap-1 rounded-xl py-1.5 text-muted-foreground transition-colors data-[status=active]:text-primary"
             >
               <span className="relative flex h-8 w-12 items-center justify-center rounded-full transition-all group-data-[status=active]:bg-primary/12 group-data-[status=active]:glow-sm">
