@@ -4,14 +4,15 @@ const REPS = /(\d+)(?:\s*a\s*(\d+))?\s*reps\b/i;
 function repsOf(set: string): string | null {
   const m = set.match(REPS);
   if (!m) return null;
-  return m[2] ? `${m[1]} a ${m[2]}` : m[1];
+  return m[2] ? `${m[1]} a ${m[2]}` : (m[1] ?? null);
 }
 
 export function summarizeSets(sets: string[]): { count: number; reps: string | null } {
   // Bloco único no formato "4x 15 a 20 reps".
-  if (sets.length === 1) {
-    const m = sets[0].match(/^(\d+)x\s/i);
-    if (m) return { count: Number(m[1]), reps: repsOf(sets[0]) };
+  const only = sets.length === 1 ? sets[0] : undefined;
+  if (only) {
+    const m = only.match(/^(\d+)x\s/i);
+    if (m) return { count: Number(m[1]), reps: repsOf(only) };
   }
   // Prescrição principal: primeiro Working Set com repetições; senão, qualquer série que não seja Feeder.
   const main =
