@@ -77,7 +77,7 @@ function HistoryPage() {
             <section key={month}>
               <div className="mb-2 flex items-baseline justify-between px-1">
                 <h2 className="font-display text-xl font-bold uppercase">{format(fromISODate(month + "-01"), "MMMM yyyy", { locale: ptBR })}</h2>
-                <span className="text-xs font-semibold text-muted-foreground">{rows.length} treinos</span>
+                <span className="text-xs font-semibold text-muted-foreground">{rows.length} {rows.length === 1 ? "treino" : "treinos"}</span>
               </div>
               <ul className="space-y-2">
                 {rows.map((s) => {

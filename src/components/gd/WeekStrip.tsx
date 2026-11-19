@@ -51,7 +51,7 @@ export function WeekStrip({
                 st === "completed" && "border-primary bg-primary text-primary-foreground glow-sm",
                 st === "in_progress" && "border-primary/70 bg-primary/15 text-primary animate-pulse-ring",
                 st === "pending" && "border-border bg-surface-raised text-foreground",
-                st === "missed" && "border-border bg-surface text-muted-foreground",
+                st === "missed" && "border-dashed border-muted-foreground/40 bg-transparent text-muted-foreground",
                 (st === "rest" || st === "outside") && "border-transparent bg-surface text-rest",
                 isToday && st !== "completed" && "border-primary ring-1 ring-primary",
               )}

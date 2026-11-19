@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { FileUp } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -6,14 +7,30 @@ import { toast } from "sonner";
 import { Wordmark } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { fromISODate, normalizeStartDate, toISODate } from "@/lib/schedule";
-import { startProgram, updateProfile } from "@/lib/data";
+import { importBackup, startProgram, updateProfile } from "@/lib/data";
 
 export function Onboarding() {
   const qc = useQueryClient();
   const [date, setDate] = useState(toISODate(new Date()));
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const start = normalizeStartDate(fromISODate(date));
+
+  /** Em um aparelho novo, permite trazer o histórico de um backup salvo antes. */
+  async function restore(file: File | undefined) {
+    if (fileRef.current) fileRef.current.value = "";
+    if (!file) return;
+    try {
+      const store = importBackup(await file.text());
+      await qc.invalidateQueries();
+      if (!store.programs.some((p) => p.status === "active")) {
+        toast.message("Backup restaurado, mas sem programa ativo. Escolha a data de início.");
+      } else toast.success("Backup restaurado.");
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
 
   async function create() {
     setSaving(true);
@@ -73,6 +90,19 @@ export function Onboarding() {
       <Button variant="hero" size="xl" onClick={create} disabled={saving}>
         {saving ? "Criando…" : "Começar programa"}
       </Button>
+      <div className="-mt-4 text-center">
+        <Button variant="link" className="text-muted-foreground" onClick={() => fileRef.current?.click()}>
+          <FileUp className="text-primary" /> Já tenho um backup · restaurar
+        </Button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          aria-label="Arquivo de backup"
+          onChange={(e) => restore(e.target.files?.[0])}
+        />
+      </div>
     </div>
   );
 }

@@ -37,7 +37,7 @@ const cellTone: Record<DayState, string> = {
   completed: "bg-primary text-primary-foreground glow-sm border-primary",
   in_progress: "bg-primary/15 text-primary border-primary/60",
   pending: "bg-surface-raised text-foreground border-border",
-  missed: "bg-surface text-muted-foreground border-border",
+  missed: "bg-transparent text-muted-foreground border-dashed border-muted-foreground/40",
   rest: "bg-rest/25 text-muted-foreground border-transparent",
   outside: "bg-transparent text-muted-foreground/40 border-transparent",
 };
@@ -102,6 +102,7 @@ function CalendarPage() {
       <ul className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
         <Legend tone="bg-primary" label="Treino concluído" />
         <Legend tone="bg-surface-raised border border-border" label="Treino pendente" />
+        <Legend tone="border border-dashed border-muted-foreground/60" label="Não registrado" />
         <Legend tone="bg-rest/40" label="Descanso programado" />
         <Legend tone="ring-2 ring-primary bg-transparent" label="Dia atual" />
       </ul>

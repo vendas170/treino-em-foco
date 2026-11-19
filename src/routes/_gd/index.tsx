@@ -117,11 +117,10 @@ function Dashboard() {
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-card px-4 py-3">
-      <p className="eyebrow">{label}</p>
-      <p className="font-display text-3xl font-extrabold leading-none">
-        {value} {sub && <span className="text-sm font-semibold text-muted-foreground">{sub}</span>}
-      </p>
+    <div className="min-w-0 rounded-2xl border border-border bg-card px-4 py-3">
+      <p className="eyebrow !text-[10px] !tracking-wide">{label}</p>
+      <p className="mt-1 font-display text-3xl font-extrabold leading-none">{value}</p>
+      {sub && <p className="mt-1 truncate text-xs font-semibold text-muted-foreground">{sub}</p>}
     </div>
   );
 }
